@@ -1,4 +1,4 @@
-package com.andersonbrito.multitenant.infra.config;
+package com.andersonbrito.multitenant.multitenancy.config;
 
 import com.andersonbrito.multitenant.multitenancy.interceptor.TenantInterceptor;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        System.out.println("********************* adicionou interceptor");
         registry.addInterceptor(tenantInterceptor);
     }
 }
