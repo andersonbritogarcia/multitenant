@@ -1,5 +1,7 @@
 package com.andersonbrito.multitenant.bula;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +11,7 @@ import java.util.List;
 @RequestMapping("/api/bulas")
 public class BulaController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(BulaController.class);
     private final BulaRepository repository;
 
     public BulaController(BulaRepository repository) {
@@ -17,6 +20,7 @@ public class BulaController {
 
     @GetMapping
     List<Bula> listAll() {
+        LOG.info("Returning all instruments");
         return repository.findAll();
     }
 

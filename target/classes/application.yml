@@ -12,8 +12,12 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
+        format_sql: false
+        show_sql: false
+
+logging:
+  pattern:
+    correlation: '[%X{traceId:-}-%X{spanId:-}] [tenantId:%X{tenantId:-}] '
 
 multitenancy:
   tenants:
