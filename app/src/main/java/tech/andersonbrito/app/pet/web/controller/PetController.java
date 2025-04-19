@@ -1,7 +1,6 @@
 package tech.andersonbrito.app.pet.web.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import tech.andersonbrito.app.pet.core.PetService;
 import tech.andersonbrito.app.pet.web.dto.AdoptPetRequest;
@@ -25,7 +24,6 @@ public class PetController {
         return new PetResponse(pet);
     }
 
-    @Cacheable(value = "pets")
     @GetMapping
     public List<PetResponse> getAllPets() {
         return petService.getAllPets()
