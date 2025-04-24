@@ -66,7 +66,7 @@ O banco de dados será inicializado automaticamente com o Docker Compose.
 #### 1. Clonar o Repositório
 ```bash
 git clone https://github.com/andersonbritogarcia/multitenant.git
-cd seu-repositorio
+cd multitenant
 ```
 
 #### 2. Construir o Projeto
