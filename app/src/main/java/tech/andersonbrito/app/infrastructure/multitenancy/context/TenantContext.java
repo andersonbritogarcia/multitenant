@@ -4,17 +4,15 @@ import org.slf4j.MDC;
 
 public class TenantContext {
 
-    private static final String KEY_SCHEMA = "schema";
     private static final ThreadLocal<String> tenantSchema = new ThreadLocal<>();
 
     public static void setTenantSchemaAdmin() {
-        tenantSchema.set("admin");
-        MDC.put(KEY_SCHEMA, "admin");
+        setTenantSchema("admin");
     }
 
-    public static void setTenantSchema(String tenantSchema) {
-        TenantContext.tenantSchema.set(tenantSchema);
-        MDC.put(KEY_SCHEMA, tenantSchema);
+    public static void setTenantSchema(String schema) {
+        tenantSchema.set(schema);
+        MDC.put("schema", schema);
     }
 
     public static String getTenantSchema() {
@@ -23,6 +21,6 @@ public class TenantContext {
 
     public static void clear() {
         tenantSchema.remove();
-        MDC.remove(KEY_SCHEMA);
+        MDC.remove("schema");
     }
 }

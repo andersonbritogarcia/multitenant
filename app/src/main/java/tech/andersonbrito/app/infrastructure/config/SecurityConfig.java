@@ -20,7 +20,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import tech.andersonbrito.app.infrastructure.filter.JwtRequestFilter;
+import tech.andersonbrito.app.infrastructure.filter.JwtAuthenticationTenantFilter;
 import tech.andersonbrito.app.infrastructure.filter.TenantCleanupFilter;
 
 import java.security.interfaces.RSAPrivateKey;
@@ -40,7 +40,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                   JwtRequestFilter jwtFilter,
+                                                   JwtAuthenticationTenantFilter jwtAuthenticationTenantFilter,
                                                    TenantCleanupFilter tenantCleanupFilter) throws Exception {
 
         http.authorizeHttpRequests(authorize ->
@@ -52,8 +52,8 @@ public class SecurityConfig {
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        http.addFilterAfter(tenantCleanupFilter, JwtRequestFilter.class);
+        http.addFilterBefore(jwtAuthenticationTenantFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(tenantCleanupFilter, JwtAuthenticationTenantFilter.class);
         return http.build();
     }
 

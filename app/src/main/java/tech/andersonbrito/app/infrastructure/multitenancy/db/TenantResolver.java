@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Component
-public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver<String>, HibernatePropertiesCustomizer {
+public class TenantResolver implements CurrentTenantIdentifierResolver<String>, HibernatePropertiesCustomizer {
 
     @Override
     public String resolveCurrentTenantIdentifier() {

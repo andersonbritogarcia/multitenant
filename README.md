@@ -1,4 +1,4 @@
-# README - Aplicação Monolítica Modular com Multitenant
+# Aplicação Monolítica Modular com Multitenant
 
 ## Descrição do Projeto
 
@@ -33,7 +33,10 @@ A aplicação é dividida em módulos independentes, cada um responsável por um
 
 3. **Shared**:
    - Contém classes e utilitários compartilhados entre os módulos, como exceções e configurações globais.
-
+   
+4. **infrastructure**:
+   - Abstrai e gerencia detalhes técnicos relacionados à infraestrutura do sistema, como multitenancy e autenticação
+   
 ---
 
 ## Configuração e Execução
@@ -62,7 +65,7 @@ O banco de dados será inicializado automaticamente com o Docker Compose.
 
 #### 1. Clonar o Repositório
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
+git clone https://github.com/andersonbritogarcia/multitenant.git
 cd seu-repositorio
 ```
 
@@ -106,16 +109,57 @@ Os testes unitários são implementados com **JUnit 5** e **Mockito**. Para exec
 ```bash
 mvn test
 ```
+---
+## Classes responsáveis pela arquitetura multitenancy
+
+`TenantContext`
+
+**Responsabilidade:** Gerenciar o contexto do tenant (esquema do banco de dados) em nível de thread.
+
+- Armazena o esquema do tenant atual usando `ThreadLocal`.
+- Permite definir, obter e limpar o esquema do tenant.
+- Integra com o MDC (Mapped Diagnostic Context) para logging.
+
+**Relação:** É usado por outras classes, como `JwtAuthenticationTenantFilter` e `TenantResolver`, para definir e recuperar o esquema do tenant.
 
 ---
 
-## Estrutura de Arquivos
+`TenantResolver`
 
-- `src/main/java`: Código-fonte principal.
-- `src/main/resources`: Arquivos de configuração, como `application.properties`.
-- `src/test/java`: Testes unitários.
-- `Dockerfile`: Configuração do contêiner da aplicação.
-- `docker-compose.yml`: Orquestração dos serviços Docker.
+**Responsabilidade:** Resolver o identificador do tenant atual para o Hibernate.
+
+- Implementa `CurrentTenantIdentifierResolver` para fornecer o esquema do tenant ao Hibernate.
+- Define o esquema padrão como `"admin"` caso nenhum tenant esteja configurado.
+
+**Relação:** Depende do `TenantContext` para obter o esquema do tenant atual. É configurado no Hibernate para suportar multitenancy.
+
+---
+
+`JwtAuthenticationTenantFilter`
+
+**Responsabilidade:** Filtrar requisições HTTP e configurar o esquema do tenant com base no JWT.
+
+- Verifica se a URL é administrativa ou se o token JWT está presente.
+- Decodifica o JWT para extrair o tenant e valida o acesso do usuário ao tenant.
+- Configura o esquema do tenant no `TenantContext`.
+
+**Relação:**  
+- Usa o `TenantContext` para definir o esquema do tenant.
+- Trabalha com o `IamApi` para validar o tenant e o acesso do usuário.
+- Atua como um ponto inicial para configurar o tenant antes que a requisição seja processada.
+
+---
+
+`ConnectionProvider`
+
+**Responsabilidade:**  Gerenciar conexões com o banco de dados para diferentes tenants.
+
+- Implementa `MultiTenantConnectionProvider` para fornecer conexões configuradas com o esquema do tenant.
+- Define o esquema do tenant na conexão antes de usá-la.
+
+**Relação:**  
+- Trabalha em conjunto com o `TenantResolver` para obter o esquema do tenant atual.
+- É configurado no Hibernate para fornecer conexões apropriadas para cada tenant.
 
 ---
 

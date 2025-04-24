@@ -18,14 +18,14 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Component
-public class JwtRequestFilter extends OncePerRequestFilter {
+public class JwtAuthenticationTenantFilter extends OncePerRequestFilter {
 
     private static final int BEARER_TOKEN_LENGTH = 7;
 
     private final IamApi iamApi;
     private final JwtDecoder jwtDecoder;
 
-    public JwtRequestFilter(IamApi iamApi, JwtDecoder jwtDecoder) {
+    public JwtAuthenticationTenantFilter(IamApi iamApi, JwtDecoder jwtDecoder) {
         this.iamApi = iamApi;
         this.jwtDecoder = jwtDecoder;
     }
@@ -38,7 +38,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         var pathUrl = getPathUrl(request);
         var authorizationHeader = request.getHeader("Authorization");
 
-        if (PublicUrls.isPublicUrl(pathUrl) || !hasBearerToken(authorizationHeader)) {
+        if (AdminUrls.isAdmin(pathUrl) || !hasBearerToken(authorizationHeader)) {
             TenantContext.setTenantSchemaAdmin();
             filterChain.doFilter(request, response);
             return;
