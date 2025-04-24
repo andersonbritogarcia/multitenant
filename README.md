@@ -29,7 +29,7 @@ A aplicação é dividida em módulos independentes, cada um responsável por um
    
 2. **Pet**:
    - Gerencia informações sobre pets e adoções.
-   - Exemplo de funcionalidade: Cadastro e listagem de pets.
+   - Exemplo de funcionalidade: Adoção e listagem de pets.
 
 3. **Shared**:
    - Contém classes e utilitários compartilhados entre os módulos, como exceções e configurações globais.
