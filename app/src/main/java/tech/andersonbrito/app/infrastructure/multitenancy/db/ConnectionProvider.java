@@ -30,15 +30,14 @@ public class ConnectionProvider implements MultiTenantConnectionProvider<String>
     }
 
     @Override
-    public Connection getConnection(String tenantSchema) throws SQLException {
+    public Connection getConnection(String schema) throws SQLException {
         var connection = dataSource.getConnection();
-        connection.setSchema(tenantSchema);
+        connection.setSchema(schema);
         return connection;
     }
 
     @Override
-    public void releaseConnection(String tenantSchema, Connection connection) throws SQLException {
-        connection.setSchema("admin");
+    public void releaseConnection(String schema, Connection connection) throws SQLException {
         connection.close();
     }
 
