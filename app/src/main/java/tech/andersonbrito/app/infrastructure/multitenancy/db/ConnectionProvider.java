@@ -38,7 +38,6 @@ public class ConnectionProvider implements MultiTenantConnectionProvider<String>
 
     @Override
     public void releaseConnection(String tenantSchema, Connection connection) throws SQLException {
-        connection.setSchema("admin");
         connection.close();
     }
 
